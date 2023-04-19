@@ -1,31 +1,38 @@
 const AppError = require("../../utils/appError");
-const conn = require("../../services/db");
+const Device = require("../../models/device");
 
 exports.getDevices = (req, res, next) => {
-    conn.query("SELECT * FROM devices order by device_name", function (err, data, fields) {
+
+    Device.devices(function (err, result) { 
+
         if (err) return next(new AppError(err))
         res.status(200).json({
             status: "success",
-            length: data?.length,
-            data: data,
+            length: result?.length,
+            data: result,
         });
+
     });
+
+
 };
 
 exports.getDevice = (req, res, next) => {
-    if (!req.params.id) {
+
+    const deviceId = req.params.id;
+
+    if (!deviceId) {
         return next(new AppError("No device id found", 404));
     }
-    conn.query(
-        "SELECT * FROM devices WHERE id = ?",
-        [req.params.id],
-        function (err, data, fields) {
-            if (err) return next(new AppError(err, 500));
-            res.status(200).json({
-                status: "success",
-                length: data?.length,
-                data: data,
-            });
-        }
-    );
-};
+    
+    Device.device(deviceId, function (err, result) { 
+
+        if (err) return next(new AppError(err))
+        res.status(200).json({
+            status: "success",
+            length: result?.length,
+            data: result,
+        });
+
+    });
+}

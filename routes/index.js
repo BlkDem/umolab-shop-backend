@@ -9,6 +9,4 @@ router.route(`${apiPreffix}/devices`).get(devicesController.getDevices);
 router.route(`${apiPreffix}/device/:id`).get(devicesController.getDevice)
 router.route(`${apiPreffix}/device_types`).get(deviceTypesController.getDeviceTypes);
 router.route(`${apiPreffix}/device_type/:id`).get(deviceTypesController.getDeviceType)
-//  .put(controllers.update)
-//  .delete(controllers.delete);
 module.exports = router;

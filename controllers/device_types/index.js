@@ -1,31 +1,38 @@
 const AppError = require("../../utils/appError");
-const conn = require("../../services/db");
+const DeviceType = require("../../models/device_type");
 
 exports.getDeviceTypes = (req, res, next) => {
-    conn.query("SELECT * FROM device_types order by device_type_name", function (err, data, fields) {
+
+    DeviceType.deviceTypes(function (err, result) { 
+
         if (err) return next(new AppError(err))
         res.status(200).json({
             status: "success",
-            length: data?.length,
-            data: data,
+            length: result?.length,
+            data: result,
         });
+
     });
+
+
 };
 
 exports.getDeviceType = (req, res, next) => {
-    if (!req.params.id) {
-        return next(new AppError("No todo id found", 404));
+
+    const deviceTypeId = req.params.id;
+
+    if (!deviceTypeId) {
+        return next(new AppError("No device id found", 404));
     }
-    conn.query(
-        "SELECT * FROM device_types WHERE id = ?",
-        [req.params.id],
-        function (err, data, fields) {
-            if (err) return next(new AppError(err, 500));
-            res.status(200).json({
-                status: "success",
-                length: data?.length,
-                data: data,
-            });
-        }
-    );
-};
+    
+    DeviceType.deviceType(deviceTypeId, function (err, result) { 
+
+        if (err) return next(new AppError(err))
+        res.status(200).json({
+            status: "success",
+            length: result?.length,
+            data: result,
+        });
+
+    });
+}
